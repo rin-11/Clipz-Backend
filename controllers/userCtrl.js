@@ -32,3 +32,27 @@ exports.registerUser = async (req, res) => {
     }
   };
 
+// Export loginUser function as a named export
+  exports.loginUser = async (req, res) => {
+    // extract the email and password properties from the req.body using destructuring
+    const { email, password } = req.body;
+    try {
+      // find user by email in the UserModel (mongoDB)
+      const user = await UserModel.findOne({ email });
+  
+          // if the user exists compare username and password
+          if (user) 
+              {
+              const validity = await bcrypt.compare(password, user.password)
+              // use a ternary operator to check the value of validity-- 
+              validity? res.status(200).json(user):res.status(400).json("Wrong Password")
+              // if the user validity is true send user (200)
+              // if the validity fails (username & password don't match) (400)
+              } 
+          else { // otherwise user not found
+              res.status(404).json("User not found");
+          }
+      } catch (error) { // (Internal Server Error)
+          res.status(500).json({message: error.message});
+        }
+      };
