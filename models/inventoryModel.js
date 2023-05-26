@@ -6,6 +6,7 @@ const InventorySchema = new mongoose.Schema(
         image: {type: String, required : true},
         name: String,
         category: String,
+        ownItem: {type: Boolean, default: true}
       },
       {
         timestamps: true,

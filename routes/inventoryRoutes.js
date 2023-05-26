@@ -1,19 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const {  createInventory, getInventory, updateInventory, deleteInventory, getUserInventory } = require('../controllers/inventoryCtrl')
 
-
-router.get('/', async(req, res)=>{res.send("Inventory Route Working")}) 
 
 // createInventoryItem
-
-// deleteInventoryItem
+router.post('/', createInventory)
 
 // getInventoryItem
-
-//getAllInventoryItems
+router.get('/:id', getInventory);
 
 // updateInventoryItem
+router.put('/:id', updateInventory);
 
+// deleteInventoryItem
+router.delete('/:id', deleteInventory);
+
+//getAllInventoryItems by UserID
+router.get('/:id/inventory', getUserInventory)
 
 
 

@@ -7,10 +7,10 @@ const { createBoard, getBoard, getAllBoards, updateBoard, deleteBoard, interactB
 router.post('/', createBoard)
 
 // Get Board by ID 
-    // (for home page when no user logged in)
 router.get('/:id', getBoard);
 
 // Get all Boards
+    // (for home page when no user logged in)
 router.get('/', getAllBoards);
 
 // Get all Boards by User ID
