@@ -1,5 +1,5 @@
 const UserModel = require('../models/userModel')
-
+const bcrypt = require("bcrypt");
 
 // Get a User
 exports.getUser = async (req, res) => {
@@ -44,7 +44,7 @@ exports.updateUser = async (req, res) => {
 
     if (id === currentUserId || currentUserAdmin) {
         // allow update if currentUserId matches URL ID or currentUserAdmin is true
-        
+
       try {
         if (password) {
         // if the user is updating password return as hashed password
@@ -85,5 +85,39 @@ exports.deleteUser = async (req, res) => {
       }
     } else {
       res.status(403).json("Access Denied");
+    }
+  };
+
+  // Follow User (add friend )
+  exports.followUser = async (req, res) => {
+    
+    const id = req.params.id; // extracts the id parameter from the URL parameters of the request (this will be on a users profile so it will be the user to follows ID)
+  
+    const { currentUserId } = req.body; // extract the currentUserId property from the request body (represents the ID of the user performing the follow action)
+    console.log(id, currentUserId); // log the values of id and currentUserId
+  
+    if (currentUserId == id) { // users cannot follow themselves
+      res.status(403).json("Access Denied");
+  
+    } else { 
+      try {
+        const followUser = await UserModel.findById(id); //find the user with the specified id in the database and assigns it to the followUser variable
+        const followingUser = await UserModel.findById(currentUserId); // find the user with the specified currentUserId (the user performing the follow action) in the database and assigns it to the followingUser variable
+  
+        if (!followUser.followers.includes(currentUserId)) { //checks if the currentUserId of the user performing the follow action is not already included in the followers array of the user being followed (followUser)
+          await followUser.updateOne({ $push: { followers: currentUserId } }); // update the followers array of the user being followed (followUser) by adding the currentUserId of the user performing the follow action
+          await followingUser.updateOne({ $push: { following: id } }); // update the following array of the user performing the follow action (followingUser) by adding the id of the user being followed
+  
+          res.status(200).json("User Followed"); // Successful follow
+  
+        } else {
+          // user (currentUserId) already following user (id)
+          res.status(403).json("Already Following User");
+        }
+      } catch (error) {
+        // Internal Server Error
+        console.log(error);
+        res.status(500).json(error);
+      }
     }
   };

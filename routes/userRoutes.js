@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUser, getAllUsers, updateUser, deleteUser } = require('../controllers/userCtrl')
+const { getUser, getAllUsers, updateUser, deleteUser, followUser } = require('../controllers/userCtrl')
 
 // ** just use for route testing **
 // router.get('/', async(req, res)=>{res.send("Test User Route")}) 
@@ -18,6 +18,7 @@ router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);
 
 // Follow a User
+router.put('/:id/follow', followUser);
 
 // Unfollow a User
 
