@@ -122,7 +122,7 @@ exports.deleteUser = async (req, res) => {
     }
   };
 
-  // Unfollow User (Remove friend)
+// Unfollow User (Remove friend)
 exports.unfollowUser = async (req, res) => { // extract the currentUserId property from the request body (represents the ID of the user performing the follow action)
     const id = req.params.id; // extracts the id parameter from the URL parameters of the request (this will be on a users profile so it will be the ID user of the user to unfollow)
     const { currentUserId } = req.body; // extract the currentUserId property from the request body (represents the ID of the user performing the unfollow action)
@@ -146,3 +146,5 @@ exports.unfollowUser = async (req, res) => { // extract the currentUserId proper
       }
     }
   };
+
+

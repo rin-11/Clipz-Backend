@@ -80,3 +80,22 @@ exports.deleteBoard = async (req, res) => {
       res.status(500).json(error);
     }
   };
+
+  // Like/Dislike Board by ID
+exports.interactBoard = async (req, res) => {
+  const id = req.params.id;// extract the id param from the req URL and assign it to the id variable
+  const { userId } = req.body; // extract the userId property from the req body and assign it to the userId variable
+
+  try {
+    const board = await Board.findById(id); // find a board with the specified id & assign to the board variable
+    if (board.likes.includes(userId)) { // check if the likes array of the retrieved board includes the userId provided in the req body
+      await board.updateOne({ $pull: { likes: userId } }); // remove the userId from the likes array using the $pull operator if already liked
+      res.status(200).json("Board Disliked");
+    } else {
+      await board.updateOne({ $push: { likes: userId } }); // add the userId to the likes array using the $push operator if userId not found in likes array
+      res.status(200).json("Board Liked");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
