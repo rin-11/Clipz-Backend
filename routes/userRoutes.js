@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUser } = require('../controllers/userCtrl')
+const { getUser, getAllUsers } = require('../controllers/userCtrl')
 
 // ** just use for route testing **
 // router.get('/', async(req, res)=>{res.send("Test User Route")}) 
@@ -9,6 +9,7 @@ const { getUser } = require('../controllers/userCtrl')
 router.get('/:id', getUser);
 
 // Get all users
+router.get('/', getAllUsers);
 
 // Update a user
 
