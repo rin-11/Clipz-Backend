@@ -41,8 +41,10 @@ exports.updateUser = async (req, res) => {
     const id = req.params.id;
     const { currentUserId, currentUserAdmin, password } = req.body;
     
-    // allow update if currentUserId matches URL ID or currentUserAdmin is true
+
     if (id === currentUserId || currentUserAdmin) {
+        // allow update if currentUserId matches URL ID or currentUserAdmin is true
+        
       try {
         if (password) {
         // if the user is updating password return as hashed password
@@ -51,7 +53,7 @@ exports.updateUser = async (req, res) => {
         }
   
         const user = await UserModel.findByIdAndUpdate(id, req.body, { new: true });
-        // nds the user with the specified id and updates the fields provided in req.body
+        // finds the user with the specified id and updates the fields provided in req.body
         if (user) { // if successful
           res.status(200).json(user);
         } else { // if user not found
@@ -62,5 +64,26 @@ exports.updateUser = async (req, res) => {
       }
     } else { // if user is not authorized to update
       res.status(403).json('Access Denied');
+    }
+  };
+
+    // Delete a user
+exports.deleteUser = async (req, res) => {
+    // extract the id param from the request URL param
+    const id = req.params.id;
+  
+    const { currentUserId, currentUserAdmin } = req.body;
+  
+    if (currentUserId == id || currentUserAdmin) {
+        // allow update if currentUserId matches URL ID or currentUserAdmin is true
+
+      try {
+        await UserModel.findByIdAndDelete(id);
+        res.status(200).json("User Deleted");
+      } catch (error) {
+        res.status(500).json(error);
+      }
+    } else {
+      res.status(403).json("Access Denied");
     }
   };
