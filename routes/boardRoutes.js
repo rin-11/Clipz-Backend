@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { createBoard } = require('../controllers/boardCtrl')
 
-
-router.get('/', async(req, res)=>{res.send("Boards Route Working")}) 
+// ** test ** 
+// router.get('/', async(req, res)=>{res.send("Boards Route Working")}) 
 
 // createBoard
+router.post('/', createBoard)
 
 // deleteBoard
 

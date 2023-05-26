@@ -4,7 +4,8 @@ const InventorySchema = new mongoose.Schema(
     {
         userId: { type: String, required: true },
         image: {type: String, required : true},
-        desc: String,
+        name: String,
+        category: String,
       },
       {
         timestamps: true,
