@@ -1,4 +1,4 @@
-const UserModel = require('../models/userModel')
+const User = require('../models/userModel')
 const bcrypt = require("bcrypt");
 
 // Get a User
@@ -7,7 +7,7 @@ exports.getUser = async (req, res) => {
     const id = req.params.id;
   
     try {
-      const user = await UserModel.findById(id);
+      const user = await User.findById(id);
       if (user) { // if user is found by ID return user information
         const { password, ...otherDetails } = user._doc;
             // extracts the password from the user info before returning saving the rest of the user info as otherDetails
@@ -24,7 +24,7 @@ exports.getUser = async (req, res) => {
   exports.getAllUsers = async (req, res) => {
 
     try {
-      let users = await UserModel.find();
+      let users = await User.find();
       users = users.map((user)=>{ // use the map function to iterate over each user in the users array found in mongoDB users
         const {password, ...otherDetails} = user._doc; // extracts the password from the user info before returning saving the rest of the user info as otherDetails
         return otherDetails; // user details excluding the password
@@ -52,7 +52,7 @@ exports.updateUser = async (req, res) => {
           req.body.password = await bcrypt.hash(password, salt);
         }
   
-        const user = await UserModel.findByIdAndUpdate(id, req.body, { new: true });
+        const user = await User.findByIdAndUpdate(id, req.body, { new: true });
         // finds the user with the specified id and updates the fields provided in req.body
         if (user) { // if successful
           res.status(200).json(user);
@@ -78,7 +78,7 @@ exports.deleteUser = async (req, res) => {
         // allow update if currentUserId matches URL ID or currentUserAdmin is true
 
       try {
-        await UserModel.findByIdAndDelete(id);
+        await User.findByIdAndDelete(id);
         res.status(200).json("User Deleted");
       } catch (error) {
         res.status(500).json(error);
@@ -101,8 +101,8 @@ exports.deleteUser = async (req, res) => {
   
     } else { 
       try {
-        const followUser = await UserModel.findById(id); //find the user with the specified id in the database and assigns it to the followUser variable
-        const followingUser = await UserModel.findById(currentUserId); // find the user with the specified currentUserId (the user performing the follow action) in the database and assigns it to the followingUser variable
+        const followUser = await User.findById(id); //find the user with the specified id in the database and assigns it to the followUser variable
+        const followingUser = await User.findById(currentUserId); // find the user with the specified currentUserId (the user performing the follow action) in the database and assigns it to the followingUser variable
   
         if (!followUser.followers.includes(currentUserId)) { //checks if the currentUserId of the user performing the follow action is not already included in the followers array of the user being followed (followUser)
           await followUser.updateOne({ $push: { followers: currentUserId } }); // update the followers array of the user being followed (followUser) by adding the currentUserId of the user performing the follow action
@@ -131,8 +131,8 @@ exports.unfollowUser = async (req, res) => { // extract the currentUserId proper
       res.status(403).json("Access Denied");
     } else {
       try {
-        const unfollowUser = await UserModel.findById(id); //find the user with the specified id in the database and assigns it to the unfollowUser variable
-        const unfollowingUser = await UserModel.findById(currentUserId); // find the user with the specified currentUserId (the user performing the follow action) in the database and assigns it to the followingUser variable
+        const unfollowUser = await User.findById(id); //find the user with the specified id in the database and assigns it to the unfollowUser variable
+        const unfollowingUser = await User.findById(currentUserId); // find the user with the specified currentUserId (the user performing the follow action) in the database and assigns it to the followingUser variable
   
         if (unfollowUser.followers.includes(currentUserId)) {
           await unfollowUser.updateOne({ $pull: { followers: currentUserId } }); // if the unfollowUser has currentUserId in its followers array -- remove currentUserId from its followers array using updateOne method with ($pull operator) 
