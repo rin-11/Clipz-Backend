@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 // Get a User
 exports.getUser = async (req, res) => {
-    // extract the id parame from the request params (req.params) & return userID
+    // extract the id param from the request params (req.params) & return userID
     const id = req.params.id;
   
     try {

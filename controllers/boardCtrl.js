@@ -14,3 +14,32 @@ exports.createBoard = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+// get Board by ID
+exports.getBoard = async (req, res) => {
+    // extract the id param from the request params (req.params)
+    const id = req.params.id;
+  
+    try {
+      const board = await Board.findById(id);
+      // if board is found by ID return board JSON information
+      res.status(200).json(board);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };
+
+
+  // Get ALL Boards
+  exports.getAllBoards = async (req, res) => {
+
+    try {
+      let boards = await Board.find();
+      boards = boards.map((board)=>{ // use the map function to iterate over each board in the boards array found in mongoDB boards
+      return boards
+      });
+      res.status(200).json(boards);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };
