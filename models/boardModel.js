@@ -8,6 +8,10 @@ const BoardSchema = new mongoose.Schema(
         likes: [],
         keywords: [],
         collaborators: [],
+        createdAt: {
+          type: Date,
+          default: new Date(),
+        },
         isPrivate: {type: Boolean, default: true}
       },
       {
