@@ -121,3 +121,28 @@ exports.deleteUser = async (req, res) => {
       }
     }
   };
+
+  // Unfollow User (Remove friend)
+exports.unfollowUser = async (req, res) => { // extract the currentUserId property from the request body (represents the ID of the user performing the follow action)
+    const id = req.params.id; // extracts the id parameter from the URL parameters of the request (this will be on a users profile so it will be the ID user of the user to unfollow)
+    const { currentUserId } = req.body; // extract the currentUserId property from the request body (represents the ID of the user performing the unfollow action)
+  
+    if (currentUserId === id) { // users cannot unfollow themselves
+      res.status(403).json("Access Denied");
+    } else {
+      try {
+        const unfollowUser = await UserModel.findById(id); //find the user with the specified id in the database and assigns it to the unfollowUser variable
+        const unfollowingUser = await UserModel.findById(currentUserId); // find the user with the specified currentUserId (the user performing the follow action) in the database and assigns it to the followingUser variable
+  
+        if (unfollowUser.followers.includes(currentUserId)) {
+          await unfollowUser.updateOne({ $pull: { followers: currentUserId } }); // if the unfollowUser has currentUserId in its followers array -- remove currentUserId from its followers array using updateOne method with ($pull operator) 
+          await unfollowingUser.updateOne({ $pull: { following: id } }); // the unFollowingUser removes id from its following array
+          res.status(200).json("User Unfollowed");
+        } else {
+          res.status(403).json("User was not found in followers");
+        }
+      } catch (error) {
+        res.status(500).json(error);
+      }
+    }
+  };
