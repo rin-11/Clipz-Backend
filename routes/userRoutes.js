@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUser, getAllUsers } = require('../controllers/userCtrl')
+const { getUser, getAllUsers, updateUser } = require('../controllers/userCtrl')
 
 // ** just use for route testing **
 // router.get('/', async(req, res)=>{res.send("Test User Route")}) 
@@ -11,7 +11,8 @@ router.get('/:id', getUser);
 // Get all users
 router.get('/', getAllUsers);
 
-// Update a user
+// Update user
+router.put('/:id', updateUser);
 
 // Delete a user
 

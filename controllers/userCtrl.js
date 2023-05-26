@@ -35,3 +35,32 @@ exports.getUser = async (req, res) => {
     }
   };
 
+// Update User
+exports.updateUser = async (req, res) => {
+    // extract the id param from the request URL param
+    const id = req.params.id;
+    const { currentUserId, currentUserAdmin, password } = req.body;
+    
+    // allow update if currentUserId matches URL ID or currentUserAdmin is true
+    if (id === currentUserId || currentUserAdmin) {
+      try {
+        if (password) {
+        // if the user is updating password return as hashed password
+          const salt = await bcrypt.genSalt(10);
+          req.body.password = await bcrypt.hash(password, salt);
+        }
+  
+        const user = await UserModel.findByIdAndUpdate(id, req.body, { new: true });
+        // nds the user with the specified id and updates the fields provided in req.body
+        if (user) { // if successful
+          res.status(200).json(user);
+        } else { // if user not found
+          res.status(404).json('User Not Found');
+        }
+      } catch (error) { //server error
+        res.status(500).json(error);
+      }
+    } else { // if user is not authorized to update
+      res.status(403).json('Access Denied');
+    }
+  };
