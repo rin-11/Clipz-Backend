@@ -62,3 +62,21 @@ exports.getBoard = async (req, res) => {
       res.status(500).json(error);
     }
   };
+
+// Delete Board by ID
+exports.deleteBoard = async (req, res) => {
+    const id = req.params.id;  // extract the id param from the req URL and assign it to the id variable
+    const { userId } = req.body; // extract the userId property from the req body and assign it to the userId variable
+  
+    try {
+      const board = await Board.findById(id); // find a board with the specified id & assign to the post variable
+      if (board.userId === userId) { // check if the userId of the retrieved board matches the userId provided in the req body
+        await board.deleteOne(); // if true -- delete the retrieved board from DB
+        res.status(200).json("Board Deleted");
+      } else { // cannot delete board if not the user's post
+        res.status(403).json("Access Denied");
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };

@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { createBoard, getBoard, getAllBoards, updateBoard } = require('../controllers/boardCtrl')
+const { createBoard, getBoard, getAllBoards, updateBoard, deleteBoard } = require('../controllers/boardCtrl')
 
-// ** test ** 
-// router.get('/', async(req, res)=>{res.send("Boards Route Working")}) 
 
 // Create Board
 router.post('/', createBoard)
@@ -18,6 +16,8 @@ router.get('/', getAllBoards);
 router.put('/:id', updateBoard);
 
 // Delete Board by ID
+router.delete('/:id', deleteBoard);
+
 
 // Like Board by ID
 

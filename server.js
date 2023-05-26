@@ -36,8 +36,8 @@ db.on('disconnected', () => console.log('mongo disconnected'));
 // Use Routes 
 app.use('/auth', userAuthRoutes); // register/login
 app.use('/user', userRoutes); // user requests (CRUD)
-app.use('/boards', boardRoutes); // boards CRUD
-app.use('/inventory', inventoryRoutes); // boards CRUD
+app.use('/board', boardRoutes); // board requests (CRUD)
+app.use('/inventory', inventoryRoutes); // inventory requests
 
 // PORT
 const PORT = process.env.PORT || 4000;
