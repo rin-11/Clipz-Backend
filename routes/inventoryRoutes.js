@@ -10,6 +10,8 @@ router.get('/', async(req, res)=>{res.send("Inventory Route Working")})
 
 // getInventoryItem
 
+//getAllInventoryItems
+
 // updateInventoryItem
 
 
