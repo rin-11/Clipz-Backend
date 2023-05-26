@@ -7,7 +7,7 @@ const cors = require("cors");
 
 
 // Require Routes 
-const userRoute = require('./routes/userRoute')
+const userAuthRoutes = require('./routes/authRoutes')
 
 
 // Middleware
@@ -31,7 +31,7 @@ db.on('disconnected', () => console.log('mongo disconnected'));
 
 
 // Use Routes 
-app.use('/auth', userRoute);
+app.use('/auth', userAuthRoutes);
 
 // PORT
 const PORT = process.env.PORT || 4000;
