@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 // Export registerUser function as a named export
 exports.registerUser = async (req, res) => {
 
-    const { email, password, displayname } = req.body;
+    const { email, password, displayname, username } = req.body;
       // destructe & extract the email, password, &displayname properties from the req.body object 
       // assign the extracted values to corresponding variables
 
@@ -18,7 +18,8 @@ exports.registerUser = async (req, res) => {
     const newUser = new UserModel({ 
           email, 
           password:hash, // give password the value of hash
-          displayname
+          displayname,
+          username
         });
     
   // start a try block to handle potential errors 
