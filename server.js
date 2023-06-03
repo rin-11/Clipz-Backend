@@ -11,6 +11,7 @@ const userAuthRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const boardRoutes = require('./routes/boardRoutes')
 const inventoryRoutes = require('./routes/inventoryRoutes')
+const searchRoutes = require('./routes/searchRoutes')
 
 
 // Middleware
@@ -38,6 +39,7 @@ app.use('/auth', userAuthRoutes); // register/login
 app.use('/user', userRoutes); // user requests (CRUD)
 app.use('/board', boardRoutes); // board requests (CRUD)
 app.use('/inventory', inventoryRoutes); // inventory requests
+app.use('/search', searchRoutes); // search routes
 
 // PORT
 const PORT = process.env.PORT || 4000;

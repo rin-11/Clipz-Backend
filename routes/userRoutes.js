@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getUser, getAllUsers, updateUser, deleteUser, followUser, unfollowUser } = require('../controllers/userCtrl')
 
+
 // ** just use for route testing **
 // router.get('/', async(req, res)=>{res.send("Test User Route")}) 
 
