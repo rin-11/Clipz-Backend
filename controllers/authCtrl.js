@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel')
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Export registerUser function as a named export
 exports.registerUser = async (req, res) => {
@@ -15,11 +16,6 @@ exports.registerUser = async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, salt)
     req.body.password = hash
   // create a new instance of the UserModel using the extracted values 
-  // const newUser = new UserModel({ 
-    //       email, 
-    //       password:hash, // give password the value of hash
-    //       username
-    //     });
     const newUser = new UserModel(req.body);
     const {email, username} = req.body
 
@@ -32,9 +28,21 @@ exports.registerUser = async (req, res) => {
           return res.status(400).json({message:"Email/Username already exists"})
         }
         // save the user data to the database
-        await newUser.save();
+      await newUser.save();
+        
+        // implement jwt to ensure only authorized users can access certain routes & actions
+      const token = jwt.sign(
+          { email: newUser.email, 
+            username: newUser.username, 
+            id: newUser._id },
+          process.env.JWT_SECRET,
+          { expiresIn: "3days" }
+        );
+      // send success status with token & user object
+      res.status(200).json({ user: newUser, token })
+
         // send success status code & newUser object in JSON format when registration is successful
-        res.status(200).json(newUser); 
+        // res.status(200).json(newUser); 
     } catch (error) { // if an error occurred during the registration process
       res.status(500).json({ message: error.message }); // send error status code
     }
@@ -49,15 +57,21 @@ exports.registerUser = async (req, res) => {
       const user = await UserModel.findOne({ email });
   
           // if the user exists compare username and password
-          if (user) 
-              {
+          if (user) {
               const validity = await bcrypt.compare(password, user.password)
               // use a ternary operator to check the value of validity-- 
-              validity? res.status(200).json(user):res.status(400).json("Wrong Password")
-              // if the user validity is true send user (200)
               // if the validity fails (username & password don't match) (400)
-              } 
-          else { // otherwise user not found
+              if (!validity) {
+                res.status(400).json("Wrong Password");
+              } else {
+                const token = jwt.sign(
+                  { email: user.email,  id: user._id },
+                  process.env.JWT_SECRET,
+                  { expiresIn: "3days" }
+                );
+                res.status(200).json({ user, token });
+              }
+           } else { // otherwise user not found
               res.status(404).json("User not found");
           }
       } catch (error) { // (Internal Server Error)
