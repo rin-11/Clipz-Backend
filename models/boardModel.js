@@ -4,6 +4,7 @@ const BoardSchema = new mongoose.Schema(
     {
         userId: { type: String, required: true },
         boardName: {type: String, required : true},
+        image: {type: String, required : true},
         inventoryItems: [],
         likes: [],
         keywords: [],
