@@ -3,22 +3,14 @@ const bcrypt = require("bcrypt");
 
 // Get a User
 exports.getUser = async (req, res) => {
-    // extract the id param from the request params (req.params) & return userID
-    const id = req.params.id;
-  
-    try {
-      const user = await User.findById(id);
-      if (user) { // if user is found by ID return user information
-        const { password, ...otherDetails } = user._doc;
-            // extracts the password from the user info before returning saving the rest of the user info as otherDetails
-        res.status(200).json(otherDetails); // user details excluding the password
-      } else {
-        res.status(404).json("User Not Found");
-      }
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  };
+  // extract the id param from the request params (req.params) & return userID
+  try {
+    const user = await User.findById(req.params.id); // Use req.params.id to retrieve the user ID from the URL
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
   // Get ALL users
   exports.getAllUsers = async (req, res) => {
@@ -37,35 +29,24 @@ exports.getUser = async (req, res) => {
 
 // Update User
 exports.updateUser = async (req, res) => {
-    // extract the id param from the request URL param
-    const id = req.params.id;
-    const { currentUserId, currentUserAdmin, password } = req.body;
-    
+  const id = req.params.id;
+  const { displayName, profilePicture } = req.body;
 
-    if (id === currentUserId || currentUserAdmin) {
-        // allow update if currentUserId matches URL ID or currentUserAdmin is true
-
-      try {
-        if (password) {
-        // if the user is updating password return as hashed password
-          const salt = await bcrypt.genSalt(10);
-          req.body.password = await bcrypt.hash(password, salt);
-        }
-  
-        const user = await User.findByIdAndUpdate(id, req.body, { new: true });
-        // finds the user with the specified id and updates the fields provided in req.body
-        if (user) { // if successful
-          res.status(200).json(user);
-        } else { // if user not found
-          res.status(404).json('User Not Found');
-        }
-      } catch (error) { //server error
-        res.status(500).json(error);
-      }
-    } else { // if user is not authorized to update
-      res.status(403).json('Access Denied');
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json('User Not Found');
     }
-  };
+
+    user.displayName = displayName || user.displayName;
+    user.profilePicture = profilePicture || user.profilePicture;
+
+    const updatedUser = await user.save();
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
     // Delete a user
 exports.deleteUser = async (req, res) => {

@@ -28,7 +28,7 @@ exports.registerUser = async (req, res) => {
           return res.status(400).json({message:"Email/Username already exists"})
         }
         // save the user data to the database
-      await newUser.save();
+      const user = await newUser.save();
         
         // implement jwt to ensure only authorized users can access certain routes & actions
       const token = jwt.sign(
@@ -36,7 +36,7 @@ exports.registerUser = async (req, res) => {
             username: newUser.username, 
             id: newUser._id },
           process.env.JWT_SECRET,
-          { expiresIn: "3days" }
+          { expiresIn: "24h" }
         );
       // send success status with token & user object
       res.status(200).json({ user: newUser, token })
@@ -67,7 +67,7 @@ exports.registerUser = async (req, res) => {
                 const token = jwt.sign(
                   { email: user.email,  id: user._id },
                   process.env.JWT_SECRET,
-                  { expiresIn: "3days" }
+                  { expiresIn: "24h" }
                 );
                 res.status(200).json({ user, token });
               }
