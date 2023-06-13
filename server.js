@@ -12,12 +12,15 @@ const userRoutes = require('./routes/userRoutes')
 const boardRoutes = require('./routes/boardRoutes')
 const inventoryRoutes = require('./routes/inventoryRoutes')
 const searchRoutes = require('./routes/searchRoutes')
+const uploadRoutes = require('./routes/uploadRoutes')
 
 
 // Middleware
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
+app.use(express.static('public')); //  middleware serves static files from the public directory
+app.use('/inventory', express.static('inventory')); // static files from the inventorydirectory
 
 // .env dependency PORT
 require('dotenv').config();
@@ -39,7 +42,8 @@ app.use('/auth', userAuthRoutes); // register/login
 app.use('/user', userRoutes); // user requests (CRUD)
 app.use('/board', boardRoutes); // board requests (CRUD)
 app.use('/inventory', inventoryRoutes); // inventory requests
-app.use('/search', searchRoutes); // search routes
+app.use('/upload', uploadRoutes) // upload requests
+app.use('/search', searchRoutes); // search requests
 
 // PORT
 const PORT = process.env.PORT || 4000;
