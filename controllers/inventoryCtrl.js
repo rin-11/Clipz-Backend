@@ -18,7 +18,7 @@ exports.createInventory = async (req, res) => {
   };
 
   // get Inventory by ID
-exports.getInventory = async (req, res) => {
+exports.getInventoryItem = async (req, res) => {
     // extract the id param from the request params (req.params)
     const id = req.params.id;
   
@@ -51,7 +51,7 @@ exports.getInventory = async (req, res) => {
   };
 
 // Delete Inventory by ID
-exports.deleteInventory = async (req, res) => {
+exports.deleteInventoryItem = async (req, res) => {
     const id = req.params.id;  // extract the id param from the req URL and assign it to the id variable
     const { userId } = req.body; // extract the userId property from the req body and assign it to the userId variable
   
@@ -68,16 +68,15 @@ exports.deleteInventory = async (req, res) => {
     }
   };
 
-  // Get all Inventory by User ID
+// Get all Inventory by User ID
 exports.getUserInventory = async (req, res) => {
-    const userId = req.params.id;
-    try {
-      const currentUserInventory = await Inventory.find({ userId: userId });
-  
-      res.status(200).json(currentUserInventory.sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      }));
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  };
+  try {
+      const userId = req.params.userId;  
+      console.log("Requested User Id: ", userId); 
+      const userInventory = await Inventory.find({userId: userId});  
+      console.log("Inventory Items: ", userInventory); 
+      res.status(200).json(userInventory); 
+  } catch (err) {
+      res.status(500).json(err);
+  }
+}
