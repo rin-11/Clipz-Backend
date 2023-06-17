@@ -20,7 +20,7 @@ app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use(express.static('public')); //  middleware serves static files from the public directory
-app.use('/inventory', express.static('inventory')); // static files from the inventorydirectory
+app.use('/inventory', express.static('public/inventory')); // static files from the inventorydirectory
 
 // .env dependency PORT
 require('dotenv').config();
