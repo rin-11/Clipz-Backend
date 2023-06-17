@@ -128,4 +128,40 @@ exports.unfollowUser = async (req, res) => { // extract the currentUserId proper
     }
   };
 
+  // Get followers of a user
+exports.getFollowers = async (req, res) => {
+  // extracts the id parameter from the URL parameters of the request
+  const id = req.params.id; 
 
+  try {
+    // find the user with the specified id in the database
+    const user = await User.findById(id); 
+    if (!user) {
+      return res.status(404).json('User Not Found');
+    }
+  // get the follower users based on the IDs in the user's 'followers' array
+    const followerUsers = await User.find({ _id: { $in: user.followers } }); 
+
+    res.status(200).json(followerUsers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get users being followed by a user
+exports.getFollowing = async (req, res) => {
+  const id = req.params.id; 
+
+  try {
+    const user = await User.findById(id); 
+    if (!user) {
+      return res.status(404).json('User Not Found');
+    }
+
+    const followingUsers = await User.find({ _id: { $in: user.following } }); 
+
+    res.status(200).json(followingUsers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
